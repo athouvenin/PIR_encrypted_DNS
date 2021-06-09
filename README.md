@@ -26,8 +26,6 @@ Suite à celà, j'ai choisi l'une des expériences décrite dans l'article pour 
 
 Le travail expérimentale s'est donc fait sur plusieurs axes:
 
--une partie sur l'**analyse des données fournies**
-
--une partie orientée sur la **réalisation et la reproduction d'expérience** puis analyse des résultats trouvées
-
--_idéalement une partie sur la comparaison des résultats de l'articles et des miens_
+- une partie sur l'**analyse des données fournies**
+- une partie orientée sur la **réalisation et la reproduction d'expérience** puis analyse des résultats trouvées
+- _idéalement une partie sur la comparaison des résultats de l'articles et des miens_
