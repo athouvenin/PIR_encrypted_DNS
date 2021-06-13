@@ -34,7 +34,6 @@ les logiciels à utiliser
 -Zmap : network scanning – savoir si le port du DoT (853) est ouvert pour quelle @IP (analyse de réseau)
 -getdns : API pour faire des requêtes DoT pour vérif que les @IP avec le port 853 ouvert sont bien capables de répondre aux requêtes DoT.
 
-.
 
 ## Première partie de l'expérience: trouver les ip avec le port 853 ouvert
 
@@ -47,7 +46,6 @@ Le github de l'API getdns pour l'installation : https://github.com/getdnsapi/get
 
 Une API pour utiliser getdns depuis python directement : https://github.com/getdnsapi/getdns-python-bindings
 
-.
 
 1. **Installation de Zmap et test avec l’@IP 1.1.1.1 (commande sudo zmap -p 853 1.1.1.1)**
 
@@ -73,7 +71,6 @@ Jun 10 16:44:48.406 [INFO] zmap: completed
 
 ça peut mettre un peu de temps à répondre mais au bout de quelque envois, le hitrate passe à 100 %, ça fonctionne !
 
-.
 
 2. **Script python pour générer les adresses ip puis faire le scan avec zmap**
 
@@ -145,7 +142,7 @@ Jun 10 17:22:04.450 [INFO] zmap: output module: csv
 Jun 10 17:22:13.502 [INFO] zmap: completed
 ```
 
-Comme nous le voyons ce-dessus, la durée complete du test prend quelques secondes. Puis nous regardons ce que contient le fichier test.csv:
+Comme nous le voyons ci-dessus, la durée complete du test prend quelques secondes. Puis nous regardons ce que contient le fichier test.csv:
 
 ```$ cat test.csv
 1.1.1.2

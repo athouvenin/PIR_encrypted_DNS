@@ -4,12 +4,13 @@
 ### Problématique : Où en est le deploiement et l'utilisation du DNS chiffré ?
 
 
-Le DNS est aujourd’hui présent dans presque toutes l’activité d’Internet : pour envoyer des mails (consultation de serveurs d’adresses), pour faire des requêtes de nom de domaine ; même les appareils (devices) utilisent DNS pour se découvrir l’un l’autre. Par son implémentation traditionnelle, les paquets DNS sont envoyés sans aucune encryption, rendant ces paquets vulnérables à des attaques de diverses natures.
+Le DNS (Domaine Name System) est aujourd’hui indispensable et omniprésent dans l’utilisation d’internet. En effet, une requête DNS se résoud en traduisant une url lisible pour l’utilisateur en adresse IP permettant de localiser le serveur hébergent la page web ou le service en quelques milisecondes à peine. Cependant, par son implémentation traditionnelle, les paquets DNS sont envoyés sans aucune encryption, rendant ces paquets vulnérables (à de la surveillance du traffic DNS, de la censure, de la manipulation des réponses DNS, de la redirection de traffic), nuisant à la sécurité et la vie privée des utilisateurs d’Internet.
 
-Et en effet, il a récement été mis en lumière la réalité des choses, à savoir l’exploitation de cette vulnérabilité dans le designe du DNS, compromettant la sécurité et la vie privée des utilisateurs d’Internet. Parmi les risques auxquels ces utilisateurs sont exposés, on retrouve : des machines clientes pouvant être traquées à travers Internet seulement en analysant leur données relatives au traffic DNS. Outre la surveillance, les « attaques » peuvent aller au-delà en altérant, traffiquant, censurant un partie du traffic. Pour résumer, on se rend compte que le traffic DNS non protégé peut entrainer de sérieux problèmes d’exposition et d’exploitation de la vie privée des utilasateurs d’Internet.
+\
+C’est pourquoi, pour pallier à ce problème, des solutions ont été déployées depuis quelques années et plusieurs protocoles ont été proposés pour chiffrer les requêtes DNS entre les clients et les serveurs, que nous généralisont par l’appellation DNS chiffré (ou DoE pour DNS-over-Encryption). Parmis eux nous retrouveront notamment DoT (DNS-over-TLS), encryptant les requêtes DNS au niveau de la couche de transport (protocols TCP/UDP) et DoH (DNS-over-HTTPS), encryptant cette fois- ci les requêtes au niveau de la couche application (protocole HTTPS). L’efficacité des protocoles chiffrés fait d'ailleurs l'objet d'une des études menées au cours de l'article. 
 
-C’est pourquoi, pour pallier à ce problème, plusieurs protocols ont été proposés pour encrypter les requêtes DNS entre les clients et les serveurs, que nous généraliseront par l’appellation DNS-over-Encryption (DoE). Parmis ces protocoles, nous retrouvons DNS-over-TLS (DoT), DNS-over-HTTPS(DoH), DNS-over-QUIC et DNSCrypt. L’efficacité de ces protocoles sera étudiée et comparée dans le document.
-Le but de cet article est en fait de faire un état lieu (où nous en sommes) du DNS encrypté à grande échelles. Et ce en s’appuyant sur les thèmes/questions suivantes :
+\
+Le but de cet article, **An End-to-End, Large-Scale Measurement of DNS-over-Encryption: How Far Have We Come?** est en fait de faire un état lieu (où nous en sommes) du DNS encrypté à grande échelles. Et ce en s’appuyant sur les thèmes/questions suivantes :
 
 1. Combien de fournisseurs offrent un service de DNS-over-Encryption (DoE) ? Est-ce que leur implémentation est sécurisée ?
 2. Y a-il des différences de performances pour l’utilisateur ? Y a-il des problème d’accès ou des erreurs causées à cause du DoE ?
@@ -24,7 +25,6 @@ Pour conclure, les DoE et notament les protocols  DNS-over-TLS et  DNS-over-HTTP
 \
 **Définitions/Vocabulaire supplémentaire**
 
-\
 DoE : DNS-over-Encryption
 
 TLS : Transport Layer Security
@@ -32,7 +32,6 @@ TLS : Transport Layer Security
 SSL : Security Socket Layer
 
 Transport Layer Security (TLS), and its now-deprecated predecessor, Secure Sockets Layer (SSL), are cryptographic protocols designed to provide communications security over a computer network (wikipedia)
-
 
 
 ## Certificats SSL invalides, pourquoi ?
