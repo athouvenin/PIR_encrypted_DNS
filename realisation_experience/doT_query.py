@@ -14,10 +14,13 @@ def check_DoT(ip):
 
     try:
         res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
-        return 'respond to DoT query'
+        return 'DoT query answer'
         
     except dns.exception.Timeout:
-        return 'no answer to DoT query'
+        return 'DoT query timeout'
+
+    except:
+        return 'DoT query error'
         
 
 

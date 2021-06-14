@@ -71,20 +71,13 @@ Jun 10 16:44:48.406 [INFO] zmap: completed
 
 ça peut mettre un peu de temps à répondre mais au bout de quelque envois, le hitrate passe à 100 %, ça fonctionne !
 
-
+\
 2. **Script python pour générer les adresses ip puis faire le scan avec zmap**
 
 \
 Ecriture d'un script qui génère les adresses ips et les écrit dans un fichier texte. On pourra ensuite lire ces adresses ip une par une et leur appliquer la commande z-map à l'aide d'un deuxième script.
 
-```# - Prendre une IP
-# - Faire la requete Zmap
-# - Stocker le résultat
-# - Ecrire dans un fichier
-# - Generer l'IP suivante
-
-#increment ip address by 1: ipaddress.ip_address('0.0.0.0') + 1
-
+```
 import ipaddress
 import os
 
@@ -101,15 +94,14 @@ with open('all_ips_0.txt', 'w') as f:
        
 
 print('finished')
-
-
-#tab_ips = [str(ip) for ip in ipaddress.IPv4Network('0.0.0.0/8')]
-#print(tab_ips)
 ```
 
 le soucis : générer et requeter toutes les adresses ip du monde, ça prend beaucoup de temps !
 
-En tapant man z-map dans le terminal, j'ai finalement trouvé dans le manuel d'utilisation un commande que me facilitait la tache en me fesant tout en un! J'ai donc abandonné ce premier script à son profit.
+\
+3. **Executer zmap pour des ranges d'ip**
+
+En tapant man z-map dans le terminal, j'ai finalement trouvé dans le manuel d'utilisation un commande que me facilitait la tache en me fesant tout en un! J'ai donc abandonné ce premier script au profit de la nouvelle commande trouvée.
 
 la commande en question :
 ```  sudo zmap -p 853 -o test.csv 1.1.1.0/24```
@@ -153,24 +145,40 @@ Comme nous le voyons ci-dessus, la durée complete du test prend quelques second
 Dans le cas testé ci-dessus, 3 @ip sur les 254 testées (entre 1.1.1.1 et 1.1.1.255) ont le port 853 ouvert.
 
 \
-En effectuant plusieurs test, je me suis cependant rendu compte que les résultats pouvaient être assez aléatoires. Pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro ips dans le fichier résultat, parfois seulement 2 sur les 3. Et l'xplication de cette irrégularité pourrait s'expliquer par un filtrage de mes requete par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyé par seconde. Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes.
+En effectuant plusieurs test, je me suis cependant rendu compte que les résultats pouvaient être assez aléatoires. Pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro ips dans le fichier résultat, parfois seulement 2 sur les 3. Et l'xplication de cette irrégularité pourrait s'expliquer par un filtrage de mes requete par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyé par seconde (et cela peut monter à plusieurs dizaines voir centaines de milier selon la taille du range testé). Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes. Autre raison, les paquets sont sûrement envoyés avec un protocole UDP pour augmenter la rapidité, mais du coup les paquets peuvent être perdus.
 
-Pour plus de fiabilité, j'ai donc cherché à limiter ce débit; --------------------
+Pour plus de fiabilité, j'ai donc cherché à limiter ce débit; on peut le faire directement dans la commande zmap en ajoutant -r:
 
-Commande z-map avec limitation du débit pour éviter d’etre filtré par le FAI
-sudo zmap -p 853 -r 5 -o test.csv 1.1.1.0/20
+Commande z-map avec limitation du débit pour améliorer la fiabilité des résultats:
+```sudo zmap -p 853 -r 5 -o test.csv 1.1.1.0/20```
 
-Note : -r 5 pour limiter le débit à 5 requetes par secondes
+Ici j'ai utilisé -r 5 pour limiter le débit à 5 requetes par secondes (le débit est volontairement pris très faible pour une optimisation maximale)
 
+Si on lance la commande présenté précédement, le test zmap met 14mn à s'executer (pour un masque à 20); ainsi, pour un débit limité à 5 requêtes par secondes et les masks proposés au dessus, les durées de test zmap sont les suivants:
 
-test de 14 minutes, on en fait 2 :
+- Pour tester 4094 ips (/20) cela prend 14 mn
+- Pour tester 81190 ips (/19) cela prend 28 mn
+- Pour tester 16382 ips (/18) cela prend 57 mn
 
+Pour vérifier, je réalise 2 tests pour le range 1.1.1.0/20 avec un débit (rate) limité à 5/s et compare les résultats. Puis j'effectue exactement la même chose sans limiter le débit (cela se fait en quelques secondes contre 2 x 14mn pour le test limitant le débit) et compare à nouveau les résultats. Dans le premier cas, nous obtenons la même chose tandis que dans le deuxième cas, les résultats sont beaucoup plus aléatoires. Je continuerais donc à limiter le débit pour la suite de mon expérience.
 
+\
+Suite à celà, je commence à effectuer des tests sur des ranges d'ip un peu aléatoirement: je commence par le range 101.101.101.101/20 (commnade: sudo zmap -p 853 -r 5 -o test101_20.csv 101.101.101.101/20). A la fin du test, mon fichier de sortie test101_20.csv en ressort vide: aucune ip testé n'a le port 853 ouvert.
 
-comparaison sur le meme set si on limite pas le débit : des résultats bcp plus aléatoires
+\
+Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue chaque test 3 fois sur le même range pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grace à Exel en supprimant les doublons. Àc e stade, je suis prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
 
--test mask/20 (14mn) à partir de l’ip 101.101.101.101 (1 résultats/4094)
--2x test mask/18 (1h) à partir de 103.205.140.168
+\
+J'ai ensuite testé 4 ranges d'ips différentes avec un masque de 20 (tous les résultats sont trouvables dans le dossier test de ce répertoire):
+
+- Test avec 103.205.143.68/18
+- Test avec 103.
+- Test avec 103.
+- Test avec 103.
+
+(Pour donner une idée, tester 16382 ip reviens par exemple à tester de l'ip 1.1.0.0 à environ l'ip 1.1.64.0)
+
+-----------------
 test 1 : 1494 résultats (/16382 à priori, ça fait 9,12 %), résultats entre 103.205.143.68 et 103.205.183.228
 
 test 2 : 1481 résultats (/16382 à priori, ça fait 9,04 %), résultats dans le même range
