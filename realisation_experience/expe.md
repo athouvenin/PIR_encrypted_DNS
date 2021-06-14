@@ -49,8 +49,8 @@ Une API pour utiliser getdns depuis python directement : https://github.com/getd
 
 1. **Installation de Zmap et test avec l’@IP 1.1.1.1 (commande sudo zmap -p 853 1.1.1.1)**
 
-
-``` $ sudo zmap -p 853 1.1.1.1
+```
+$ sudo zmap -p 853 1.1.1.1
 [sudo] Mot de passe de agnes : 
 Jun 10 16:44:39.310 [WARN] blacklist: ZMap is currently using the default blacklist located at /etc/zmap/blacklist.conf. By default, this blacklist excludes locally scoped networks (e.g. 10.0.0.0/8, 127.0.0.1/8, and 192.168.0.0/16). If you are trying to scan local networks, you can change the default blacklist by editing the default ZMap configuration at /etc/zmap/zmap.conf.
 Jun 10 16:44:39.317 [WARN] zmap: too few targets relative to senders, dropping to one sender
@@ -104,6 +104,7 @@ le soucis : générer et requeter toutes les adresses ip du monde, ça prend be
 En tapant man z-map dans le terminal, j'ai finalement trouvé dans le manuel d'utilisation un commande que me facilitait la tache en me fesant tout en un! J'ai donc abandonné ce premier script au profit de la nouvelle commande trouvée.
 
 la commande en question :
+
 ```  sudo zmap -p 853 -o test.csv 1.1.1.0/24```
 
 \
@@ -118,7 +119,8 @@ Mask /19 : 8190 ips
 Mask /18 : 16382 ips
 
 
-```$ sudo zmap -p 853 -o test.csv 1.1.1.0/24
+```
+$ sudo zmap -p 853 -o test.csv 1.1.1.0/24
 [sudo] Mot de passe de agnes : 
 Jun 10 17:22:04.440 [WARN] blacklist: ZMap is currently using the default blacklist located at /etc/zmap/blacklist.conf. By default, this blacklist excludes locally scoped networks (e.g. 10.0.0.0/8, 127.0.0.1/8, and 192.168.0.0/16). If you are trying to scan local networks, you can change the default blacklist by editing the default ZMap configuration at /etc/zmap/zmap.conf.
 Jun 10 17:22:04.450 [INFO] zmap: output module: csv
@@ -136,7 +138,8 @@ Jun 10 17:22:13.502 [INFO] zmap: completed
 
 Comme nous le voyons ci-dessus, la durée complete du test prend quelques secondes. Puis nous regardons ce que contient le fichier test.csv:
 
-```$ cat test.csv
+```
+$ cat test.csv
 1.1.1.2
 1.1.1.1
 1.1.1.3
@@ -150,6 +153,7 @@ En effectuant plusieurs test, je me suis cependant rendu compte que les résulta
 Pour plus de fiabilité, j'ai donc cherché à limiter ce débit; on peut le faire directement dans la commande zmap en ajoutant -r:
 
 Commande z-map avec limitation du débit pour améliorer la fiabilité des résultats:
+
 ```sudo zmap -p 853 -r 5 -o test.csv 1.1.1.0/20```
 
 Ici j'ai utilisé -r 5 pour limiter le débit à 5 requetes par secondes (le débit est volontairement pris très faible pour une optimisation maximale)
@@ -166,33 +170,23 @@ Pour vérifier, je réalise 2 tests pour le range 1.1.1.0/20 avec un débit (rat
 Suite à celà, je commence à effectuer des tests sur des ranges d'ip un peu aléatoirement: je commence par le range 101.101.101.101/20 (commnade: sudo zmap -p 853 -r 5 -o test101_20.csv 101.101.101.101/20). A la fin du test, mon fichier de sortie test101_20.csv en ressort vide: aucune ip testé n'a le port 853 ouvert.
 
 \
-Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue chaque test 3 fois sur le même range pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grace à Exel en supprimant les doublons. Àc e stade, je suis prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
+Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue **chaque test 3 fois sur le même range** pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grace à Exel en supprimant les doublons. Àc e stade, je suis prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
 
 \
 J'ai ensuite testé 4 ranges d'ips différentes avec un masque de 20 (tous les résultats sont trouvables dans le dossier test de ce répertoire):
 
-- Test avec 103.205.143.68/18
-- Test avec 103.
-- Test avec 103.
-- Test avec 103.
+- Test avec 103.205.143.68/18: on trouve 1533 ips différentes avec le port 853 ouvert après les 3 tests (/16382 à priori, ça fait 9,35 %)
+- Test avec 176.131.76.200/18: on trouve aucuns résultats (0%)
+- Test avec 185.228.168.0/18: on trouve 1064 ips différentes (6,49%)
+- Test avec 210.128.97.200: on trouve 6 ips différentes (0,004%)
 
+\
 (Pour donner une idée, tester 16382 ip reviens par exemple à tester de l'ip 1.1.0.0 à environ l'ip 1.1.64.0)
 
------------------
-test 1 : 1494 résultats (/16382 à priori, ça fait 9,12 %), résultats entre 103.205.143.68 et 103.205.183.228
+Voici comment se présente l'un de ces tests (sur terminal de commande):
 
-test 2 : 1481 résultats (/16382 à priori, ça fait 9,04 %), résultats dans le même range
-test 3 : 1458 résultats, résultats dans le même range
-
-Recherche pour remplacer l’utilisation de getdns, compliqué à prendre en main : librairie dnspython
-
-https://dnspython.readthedocs.io/en/latest/query.html#tls
-
-
-
-test sur le range : 176.131.76.200/18
-
- $ sudo zmap -p 853 -r 5 -o test176_1_18.csv 176.131.76.200/18
+```
+$ sudo zmap -p 853 -r 5 -o test176_1_18.csv 176.131.76.200/18
 [sudo] Mot de passe de agnes : 
 Jun 08 09:48:20.470 [WARN] blacklist: ZMap is currently using the default blacklist located at /etc/zmap/blacklist.conf. By default, this blacklist excludes locally scoped networks (e.g. 10.0.0.0/8, 127.0.0.1/8, and 192.168.0.0/16). If you are trying to scan local networks, you can change the default blacklist by editing the default ZMap configuration at /etc/zmap/zmap.conf.
 Jun 08 09:48:20.479 [INFO] zmap: output module: csv
@@ -212,27 +206,27 @@ Jun 08 09:48:20.479 [INFO] zmap: output module: csv
  0:13 0% (59m left); send: 60 0 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
  0:14 0% (58m left); send: 66 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
  0:15 0% (56m left); send: 72 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+```
+
+### **Conclusion et remarques sur cette première partie d'expérience:**
+
+je vois pas trop où ça me mène les tests là…. **[A COMPLETER]**
 
 
-
-aucuns resultats
-
-test avec 185.228.168.0  x3 dont 1 sur le serveur de Thibaud
-
-
-
-test 210.128.97.200 (jn) x 3
-
-je vois pas trop où ça me mène les tests là….
-
-####  concaténer les résultats trouvés et les trier avec Exel
 
 ## 2eme partie de l’expérience : envoyer des requetes dot aux adresses ip récupérées dans les scripts
 
-#### 1ere étape : écrire un script avec la librairie dnspython pour faire une dot query à une seule ip
+\
+En lisant la documentation de getdns, l'API utilisé dans l'expérience originale, je me suis rendu compte qu'elle serait un peu difficile à prendre en mais et j'ai cherché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai donc trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin
+
+\
+Lien vers la documentation dnspython: https://dnspython.readthedocs.io/en/latest/query.html#tls
+
+### **1ere étape : écrire un script avec la librairie dnspython pour faire une dot query à UNE SEULE @IP**
 
 le script :
 
+```
 import dns.query
 import dns.message
 import dns.name 
@@ -241,14 +235,17 @@ domain = dns.name.from_text('google.com')
 mes = dns.message.make_query(domain, dns.rdatatype.A)
 
 try:
-res = dns.query.tls(mes, '1.1.1.6', timeout=2)
-print(res.to_text())
+    res = dns.query.tls(mes, '1.1.1.6', timeout=2)
+    print(res.to_text())
 except dns.exception.Timeout:
-print("No answer")
+    print("No answer")
+```
 
+\
+la réponse lorsque l'on lance le script:
 
-
-la réponse :
+```
+si la requête doT est un succès:
 
 id 1059
 opcode QUERY
@@ -262,11 +259,79 @@ google.com. 290 IN A 142.250.187.238
 ;ADDITIONAL
 
 sinon, no answer
+```
 
-##### 2eme étape : lire les ip du fichier csv et les tester. Stocker le résultat dans la « 2eme colonne » du fichier
+### **2eme étape : lire les ip du fichier csv et les tester. Stocker le résultat dans la « 2eme colonne » du fichier**
 
-création d'un script prenant en argument le fichier d'entrée et le fichier de sortie:
+Adaptation du script pour qu'il prenne en argument le fichier d'entrée (contenant les @ip à tester) et le fichier de sortie (contenant ces @ip avec la réponse obtenue à la requête doT):
 
+```
+import dns.query
+import dns.message
+import dns.name 
+import csv
+import sys
+
+def check_DoT(ip):
+    domain = dns.name.from_text('google.com')
+    mes = dns.message.make_query(domain, dns.rdatatype.A)
+
+    try:
+        res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
+        return 'respond to DoT query'
+        
+    except dns.exception.Timeout:
+        return 'no answer to DoT query'
+
+input_file = sys.argv[1]
+output_file = sys.argv[2]
+
+with open(input_file, 'r') as read_obj:
+    with open(output_file, 'w', newline='') as write_obj:
+        csv_reader = csv.reader(read_obj)
+        csv_writer = csv.writer(write_obj)
+        
+        for row in csv_reader:
+            row.append(check_DoT(row[0]))
+            row.append(check_DoT(row[0]))   #on réalise le test 2 fois pour plus de fiabilité dans les résultats
+            csv_writer.writerow(row)
+```
+
+\
+La forme des résultats sur le fichier de sortie (format csv)(test avec le fichier d'entrée test210_1_18.csv):
+
+```
+210.128.97.221,respond to DoT query,respond to DoT query
+210.128.97.92,respond to DoT query,respond to DoT query
+210.128.97.222,respond to DoT query,respond to DoT query
+210.128.97.89,respond to DoT query,respond to DoT query
+210.128.97.91,respond to DoT query,respond to DoT query
+210.128.97.219,respond to DoT query,respond to DoT query
+```
+
+Remarque: certaines @ip bloquaient le script et généraient des erreurs car elles fesait partie de la blacklist (voir la "capture terminal ci-après); j'ai donc levé une deuxième exception dans le script afin de résoudre ce problème.
+
+```
+$ python3 doT_query.py tout103.csv res103_doT.csv
+Traceback (most recent call last):
+  File "doT_query.py", line 34, in <module>
+    row.append(check_DoT(row[0]))
+  File "doT_query.py", line 16, in check_DoT
+    res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
+  File "/home/agnes/.local/lib/python3.8/site-packages/dns/query.py", line 809, in tls
+    _tls_handshake(s, expiration)
+  File "/home/agnes/.local/lib/python3.8/site-packages/dns/query.py", line 737, in _tls_handshake
+    s.do_handshake()
+  File "/usr/lib/python3.8/ssl.py", line 1304, in do_handshake
+    self._check_connected()
+  File "/usr/lib/python3.8/ssl.py", line 1088, in _check_connected
+    self.getpeername()
+OSError: [Errno 107] Transport endpoint is not connected
+ ```
+
+Et voici alors le script modifié en conséquence:
+
+```
 import dns.query
 import dns.message
 import dns.name 
@@ -281,10 +346,13 @@ def check_DoT(ip):
 
     try:
         res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
-        return 'respond to DoT query'
+        return 'DoT query answer'
         
     except dns.exception.Timeout:
-        return 'no answer to DoT query'
+        return 'DoT query timeout'
+
+    except:
+        return 'DoT query error'
         
 
 
@@ -301,18 +369,83 @@ with open(input_file, 'r') as read_obj:
             row.append(check_DoT(row[0]))
             row.append(check_DoT(row[0]))   #on réalise le test 2 fois pour plus de fiabilité dans les résultats
             csv_writer.writerow(row)
+```
+
+### **4ème étape: appliquer le script doT_query à chaque échantillon relevé concaténer**
+
+Résultats: **[A COMPLETER]**
+
+script automatisation demande z-map toutes les 10000
+
+possibilité pour zmap de lire un fichier d’entrée avec la commande : --whitelist-file
+
+```
+sudo zmap -p 853 --whitelist-file tout210.csv
+Jun 13 21:28:39.898 [WARN] zmap: too few targets relative to senders, dropping to one sender
+Jun 13 21:28:39.899 [INFO] zmap: output module: csv
+Jun 13 21:28:39.899 [INFO] csv: no output file selected, will use stdout
+ 0:00 1%; send: 6 done (108 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+210.128.97.92
+210.128.97.89
+210.128.97.91
+210.128.97.222
+210.128.97.221
+210.128.97.219
+ 0:01 13%; send: 6 done (108 p/s avg); recv: 6 5 p/s (5 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:02 26%; send: 6 done (108 p/s avg); recv: 6 0 p/s (2 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:03 38%; send: 6 done (108 p/s avg); recv: 6 0 p/s (1 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:04 50%; send: 6 done (108 p/s avg); recv: 6 0 p/s (1 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:05 63% (3s left); send: 6 done (108 p/s avg); recv: 6 0 p/s (1 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:06 75% (2s left); send: 6 done (108 p/s avg); recv: 6 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:07 88% (1s left); send: 6 done (108 p/s avg); recv: 6 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+ 0:08 101% (0s left); send: 6 done (108 p/s avg); recv: 6 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 100.00%
+Jun 13 21:28:49.003 [INFO] zmap: completed
+```
+
+\
+On reprend alors le script python que l’on a fait initialement qui générait les adresses ip dans un fichier, on le modifie pour qu'il fasse des sauts de 40 000 ip à chaque itération puis on donnera ce fichier à zmap.
+
+```
+import ipaddress
+import os
 
 
-forme des résultats sur le fichier de sortie (format csv)(test avec le fichier d'entrée test210_1_18.csv):
+max_ip = 107374 # (2^32 / 40000, car on fait une ip toutes les 40 000)
+une_ip = ipaddress.ip_address('0.0.0.0')
 
-210.128.97.221,respond to DoT query,respond to DoT query
-210.128.97.92,respond to DoT query,respond to DoT query
-210.128.97.222,respond to DoT query,respond to DoT query
-210.128.97.89,respond to DoT query,respond to DoT query
-210.128.97.91,respond to DoT query,respond to DoT query
-210.128.97.219,respond to DoT query,respond to DoT query
+with open('all_ips_40.txt', 'w') as f:
+    for i in range(0, max_ip):
+        
+        f.write("%s\n" % une_ip)
+        une_ip = une_ip + 40000
+
+       
+
+print('finished')
+```
+
+\
+on lance la commande zmap :
+
+```
+[1]> sudo zmap -p 853 -r5 --whitelist-file all_ips_40.txt -o test_all40.csv 
+Jun 13 20:11:37.149 [INFO] zmap: output module: csv
+ 0:00 0%; send: 0 0 p/s (0 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:01 0%; send: 4 3 p/s (3 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:02 0%; send: 9 4 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:03 0%; send: 14 4 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:04 0%; send: 20 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:05 0% (5h25m left); send: 24 3 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:06 0% (5h11m left); send: 30 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:07 0% (5h20m left); send: 34 3 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:08 0% (5h10m left); send: 40 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:09 0% (5h17m left); send: 44 3 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:10 0% (5h10m left); send: 50 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:11 0% (5h15m left); send: 54 3 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+ 0:12 0% (5h10m left); send: 60 5 p/s (4 p/s avg); recv: 0 0 p/s (0 p/s avg); drops: 0 p/s (0 p/s avg); hitrate: 0.00%
+```
+
+test toutes les ips du monde sans rate :
+sudo zmap -p 853  -o test_all1.csv -i ens18 0.0.0.0/0
 
 
-
-
-#### 4ème étape: appliquer le script doT_query à chaque échantillon relevé concaténer
