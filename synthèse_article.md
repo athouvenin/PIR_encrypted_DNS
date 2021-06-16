@@ -34,7 +34,7 @@ SSL : Security Socket Layer
 Transport Layer Security (TLS), and its now-deprecated predecessor, Secure Sockets Layer (SSL), are cryptographic protocols designed to provide communications security over a computer network (wikipedia)
 
 
-## Certificats SSL invalides, pourquoi ?
+## SSL certificates: what are they and why they could be Invalid ?
 
 https://sematext.com/blog/ssl-certificate-error/?fbclid=IwAR1TcZga8Ff880WIlN56SM--kZ5PkxQHvcpDejlE9laxlMu2S0yGYL0Cxo8
 https://sectigostore.com/page/solve-the-invalid-ssl-tls-certificate-issue/?fbclid=IwAR2gG_7_85lCqnArZj9MXCJge2eWDwvjl6Lb20czgDIZrH86ZTHG86CKSqA
