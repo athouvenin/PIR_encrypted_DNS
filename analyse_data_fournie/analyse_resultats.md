@@ -8,6 +8,8 @@ Lien vers les jeux de données et le code source des auteurs de l'article : htt
 \
 Remarque: Vous trouverez ce jeux de données ainsi que leur analyses dans les fichiers au format xlsx (Exel) de ce répertoire.
 
+Autre remarque: les jeux de données ne contiennent que des réponses aux requêtes DoT, nous nous concentrerons donc uniquement sur ce protocole pour les analyses et les expériences.
+
 \
 **Préambule**: que contient ces jeux de données? Comment sont ils organisés?  **[A COMPLETER]**
 
@@ -24,35 +26,41 @@ Pour chaque jeu de données, 4 évaluations ont été faites:
 ### 1) le nombre de résolveurs répondant aux DoT queries dans le monde
 
 \
-**Dataset du 01/02/2019**
-
-
-\
-**Dataset du 01/05/2019**
+**Dataset du 01/02/2019** : 1198
 
 \
-**Dataset du 01/07/2020**
+**Dataset du 01/05/2019** : 2053
+
+\
+**Dataset du 01/07/2020** : 7062
 
 \
 **Observations / Remarques / Conclusion**
+
+Nous trouvons quelques milliers de résolveurs qui répondent au DoTD'abord, les résultats de 2019 collent avec ceux annoncé dans l'article. Effectivement, à la fin de la page 5 il est écrit "As shown in Figure 3, **over 1.5K open DoT resolvers are discovered** in each scan, significantly more than the public resolver lists".
+
+Par ailleurs, nous constatons l'augmentation du nombre avec le temps, notament entre l'année 2019 et 2020, ce qui est encore un fois conforme avec ce que propose l'article.
 
 ### 2) le nombre de resolveurs en question que possède chaque pays
 
 \
 **Dataset du 01/02/2019**
 
-\
-Open DoT resolvers dans 37 pays différents ; 1198 open dot resolvers e tout (compter 1198 @ip différentes).
-Comparaison avec le tableau donné dans l’article :
-
-Globalement, pour chaque chiffre du tableau, il y en a quelques-uns en plus par rapport aux résultats trouvés dans le dataset.
+48 pays dans le monde contiennent au moins un résolveur de DoT.
 
 \
 **Dataset du 01/05/2019**
 
+55 pays dans le monde contiennent au moins un résolveur de DoT.
+
+\
+**Comparaison avec le tableau**
+
+[A COMPLETER], images à mettre
 \
 **Dataset du 01/07/2020**
 
+52 pays dans le monde contiennent au moins un résolveur de DoT.
 \
 **Observations / Remarques / Conclusion**
 

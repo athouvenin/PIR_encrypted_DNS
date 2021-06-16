@@ -483,7 +483,7 @@ J'utilise donc simplement la commande qui suit et attends qu'elle aie fini de s'
 **Nous obtenons 1454 résultats**, donc 1454 @ip avec le port 853 ouvert. Nous appliquons ensuite les requêtes DoT à ces résultats, toujours de la même façon que précédement et nous avons **5 réponses, soit 0,0034%**.
 
 \
-**Conclusion sur les réponses aux requêtes DoT des @ips avec le port 853 ouvert:**
+**Conclusion sur les réponses aux requêtes DoT des @ips avec le port 853 ouvert:**  **[A COMPLETER]**, dans l'article c'est dit
 
 Parmis les tests faits, surtout les derniers qui sont un peu plus représentatifs, nous observons très peu de résultats, que ce soit pour le nombre d'@ip avec le port 853 ouvert et encore plus le nombre d'@ip qui répondent aux requêtes DoT. C'était plutôt attendu, et ces résultats sont cohérents avec ce qui a été présenté dans l'article de référence. (On rappelle que d'après l'article moins de 1% des requêtes DNS du monde sont chiffrées).
 
@@ -492,3 +492,10 @@ Cependant, nous avons bien des résultats "positifs", dans le sens où nous avon
 En outre, nous pouvons remarquer qu'il y a quand même beaucoup de host (ou d'@ip) qui ne répondent pas aux requêtes DoT alors qu'elles ont le port 853 ouvert. Nous pouvons alors nous demander pourquoi, et quels peuvent être les autres utilisation de ce port?
 
 Tout d'abord, le port 853 est contenu dans le range des ports normés, c'est à dire des ports spécifiques réservé à une utilité, en l'occurence à écouter le traffic Dot pour le port 853. Les raisons qui pourraient alors expliquer pourquoi les hosts ont le port 853 ouvert mais ne répondent pas aux requêtes DoT peuvent être parce que le serveur à qui ont effectue la requête filtre mes requêtes, par exemple parce que l'ip de ma machine n'appartient pas à un range d'ip autorisé par le serveur. Cela peut aussi être une erreur du coté du serveur, soit parce qu'il reçoit trop de straffic, soit à cause d'un problème de configuration. Enfin, il est également possible que le port 853 du serveur soit ouvert pour une autre utilisation, à ce moment spécifique à ce serveur, et configuré manuellement comme tel, auquel cas il ne peut pas répondre aux requêtes DoT.
+
+---------------------
+
+From each Internet-
+wide scan, we discover 2 to 3 million hosts with port 853 open (e.g.,
+356M on Feb 1 and 230M on May 1), yet a vast majority of them
+do not provide DoT (i.e., they cause getdns errors). ~0,06 % d'après l'article (1,5 K / 2,5 M)
