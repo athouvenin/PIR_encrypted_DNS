@@ -4,13 +4,13 @@
 
 \
 **Objectifs:** 
-- retester 1 ou 2 ans plus tard les ip avec port 853 ouvert + répondant aux requêtes DoT
-- tenter d'analyser les résultats obtenus et les comparer aux résultats fournis
+- retester 1 ou 2 ans plus tard les adresses ip avec port 853 ouvert + répondant aux requêtes DoT
+- tenter d'analyser les résultats obtenus et les comparer aux résultats fournis (car les jeux de données disponibles correspondent aux résultats des @IP du monde qui répondent aux requêtes DoT)
 
 \
 Lien vers les jeux de données et le code source des auteurs de l'article : https://dnsencryption.info/imc19-doe.html
 
-Dans l'article, page 5, nous trouvons l'extrait suivant dans la partie methodologie:
+Dans l'article à la section "3.1 Methodology", page 5, nous trouvons l'extrait suivant:
 
 _"In practice, we first use ZMap to discover all IPv4 addresses with port 853 open (using the zmap -p 853 command), and then probe the addresses with DoT queries of a domain registered by us, using getdns API. In the first stage, our scan originates from
 3 IP addresses in China and the US (on cloud platforms), and we configure the tool to cover the entire IPv4 address space in a random order. For addresses with port 853 open, only those successfully responding to our DoT queries are regarded as open DoT resolvers."_
@@ -40,14 +40,14 @@ les logiciels à utiliser
 \
 **Le port 853 est le port assigné au DNS-over-TLS (DoT)**. L'intérêt de cette première partie d'expérience est de nous faire gagner beaucoup de temps sur la deuxième partie qui consiste à envoyer des requêtes DoT à des @ip pour voir si elles sont capables d'y répondre.
 
-Le github de Zmap, le wiki est dans l'onglet wiki sur github directement : https://github.com/zmap/zmap
+Le github de Zmap (le wiki est dans l'onglet wiki sur github directement) : https://github.com/zmap/zmap
 
 Le github de l'API getdns pour l'installation : https://github.com/getdnsapi/getdns
 
 Une API pour utiliser getdns depuis python directement : https://github.com/getdnsapi/getdns-python-bindings
 
 
-1. **Installation de Zmap et test avec l’@IP 1.1.1.1 (commande sudo zmap -p 853 1.1.1.1)**
+1. **Installation de Zmap puis test avec l’@IP 1.1.1.1 (commande sudo zmap -p 853 1.1.1.1)**
 
 ```
 $ sudo zmap -p 853 1.1.1.1
@@ -69,7 +69,7 @@ Jun 10 16:44:39.318 [INFO] csv: no output file selected, will use stdout
 Jun 10 16:44:48.406 [INFO] zmap: completed
 ```
 
-ça peut mettre un peu de temps à répondre mais au bout de quelque envois, le hitrate passe à 100 %, ça fonctionne !
+ça peut mettre un peu de temps à répondre mais au bout de quelque envois, le hitrate passe à 100 % (comme on peut le voir sur la capture du terminal), ça fonctionne !
 
 \
 2. **Script python pour générer les adresses ip puis faire le scan avec zmap**
@@ -108,16 +108,14 @@ la commande en question :
 ```  sudo zmap -p 853 -o test.csv 1.1.1.0/24```
 
 \
-En spécifiant le masque (ici /24 par exemple), je spécifie sur quel range d'ip (le nombre d'ip testées à la suite) je veux effectuer mon test. Ci dessous les valeurs correspondantes des masques utilisés:
+En spécifiant le masque (ici /24 par exemple), je spécifie sur quel range d'ip (le nombre d'ip testées à la suite) je veux effectuer mon test. Je n'ai donc plus besoin de générer dans un fichier le range d'adresse IP à tester, et seules les adresses avec le port 853 ouvert seront écrite dans le fichier de sortie (appelé test.csv dans la commande d'exemple ci dessus).
 
-Mask /24 : 254 ips
+ Ci dessous les valeurs correspondantes des masques utilisés:
 
-Mask /20 : 4094 ips
-
-Mask /19 : 8190 ips
-
-Mask /18 : 16382 ips
-
+- Mask /24 : 254 ips
+- Mask /20 : 4094 ips
+- Mask /19 : 8190 ips
+- Mask /18 : 16382 ips
 
 ```
 $ sudo zmap -p 853 -o test.csv 1.1.1.0/24
@@ -136,7 +134,7 @@ Jun 10 17:22:04.450 [INFO] zmap: output module: csv
 Jun 10 17:22:13.502 [INFO] zmap: completed
 ```
 
-Comme nous le voyons ci-dessus, la durée complete du test prend quelques secondes. Puis nous regardons ce que contient le fichier test.csv:
+Comme nous le voyons ci-dessus, la durée complète du test prend quelques secondes. Puis nous regardons ce que contient le fichier de sortie test.csv:
 
 ```
 $ cat test.csv
@@ -148,7 +146,7 @@ $ cat test.csv
 Dans le cas testé ci-dessus, 3 @ip sur les 254 testées (entre 1.1.1.1 et 1.1.1.255) ont le port 853 ouvert.
 
 \
-En effectuant plusieurs test, je me suis cependant rendu compte que les résultats pouvaient être assez aléatoires. Pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro ips dans le fichier résultat, parfois seulement 2 sur les 3. Et l'explication de cette irrégularité pourrait s'expliquer par un filtrage de mes requetes par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyées par seconde (et cela peut monter à plusieurs dizaines voir centaines de milier selon la taille du range testé). Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes. Autre raison, les paquets sont sûrement envoyés avec un protocole UDP pour augmenter la rapidité, mais du coup les paquets peuvent être perdus.
+En effectuant plusieurs test, je me suis cependant rendue compte que les résultats pouvaient être assez aléatoires. Par exemple pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro ips dans le fichier résultat, parfois seulement 2 sur les 3. Et cette irrégularité pourrait s'expliquer par un filtrage de mes requetes par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyées par seconde (et cela peut monter à plusieurs dizaines voir centaines de milliers selon la taille du range testé). Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes. Autre raison, les paquets sont sûrement envoyés avec un protocole UDP pour augmenter la vitesse d'exécution, mais du coup les paquets peuvent être perdus.
 
 Pour plus de fiabilité, j'ai donc cherché à limiter ce débit; on peut le faire directement dans la commande zmap en ajoutant -r:
 
@@ -156,7 +154,7 @@ Commande z-map avec limitation du débit pour améliorer la fiabilité des résu
 
 ```sudo zmap -p 853 -r 5 -o test.csv 1.1.1.0/20```
 
-Ici j'ai utilisé -r 5 pour limiter le débit à 5 requetes par secondes (le débit est volontairement pris très faible pour une optimisation maximale)
+Ici j'ai utilisé -r 5 pour limiter le débit à 5 requêtes par secondes (le débit est volontairement pris très faible pour une optimisation maximale).
 
 Si on lance la commande présentée précédement, le test zmap met 14mn à s'executer (pour un masque de 20); ainsi, pour un débit limité à 5 requêtes par secondes et les masques proposés au dessus, les durées de test zmap sont les suivants:
 
@@ -164,16 +162,16 @@ Si on lance la commande présentée précédement, le test zmap met 14mn à s'ex
 - Pour tester 81190 ips (/19) cela prend 28 mn
 - Pour tester 16382 ips (/18) cela prend 57 mn
 
-Pour vérifier, je réalise 2 tests pour le range 1.1.1.0/20 avec un débit (rate) limité à 5/s et compare les résultats. Puis j'effectue exactement la même chose sans limiter le débit (cela se fait en quelques secondes contre 2 x 14mn pour le test limitant le débit) et compare à nouveau les résultats. Dans le premier cas, nous obtenons la même chose tandis que dans le deuxième cas, les résultats sont beaucoup plus aléatoires. Je continuerais donc à limiter le débit pour la suite de mon expérience.
+Pour vérifier, je réalise 2 tests pour le range 1.1.1.0/20 avec un débit (rate) limité à 5/s. Puis j'effectue exactement la même chose sans limiter le débit (cela se fait en quelques secondes contre 2 x 14mn pour le test limitant le débit. Je compare ensuite les résultats des différents tests. Dans le premier cas, nous obtenons la même chose tandis que dans le deuxième cas, les résultats sont beaucoup plus aléatoires. Je continuerais donc à limiter le débit pour la suite de mon expérience.
 
 \
 Suite à celà, je commence à effectuer des tests sur des ranges d'ip un peu aléatoirement: je commence par le range 101.101.101.101/20 (commnade: sudo zmap -p 853 -r 5 -o test101_20.csv 101.101.101.101/20). A la fin du test, mon fichier de sortie test101_20.csv en ressort vide: aucune ip testé n'a le port 853 ouvert.
 
 \
-Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue **chaque test 3 fois sur le même range** pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grace à Exel en supprimant les doublons. À ce stade, je suis prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
+Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue **chaque test 3 fois sur le même range** pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grâce à Exel en supprimant les doublons. Une fois que j'aurais testé plusieurs range d'IP comme décrit juste avant, je serais prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
 
 \
-J'ai ensuite testé 4 ranges d'ips différentes avec un masque de 20 (tous les résultats sont trouvables dans le dossier test de ce répertoire):
+J'ai donc testé 4 ranges d'ips différentes avec un masque de 18 (tous les fichiers de résultats sont trouvables dans le dossier "TESTS" de ce répertoire):
 
 - Test avec 103.205.143.68/18: on trouve 1533 ips différentes avec le port 853 ouvert après les 3 tests (/16382 à priori, ça fait 9,35 %)
 - Test avec 176.131.76.200/18: on trouve aucuns résultats (0%)
@@ -183,7 +181,7 @@ J'ai ensuite testé 4 ranges d'ips différentes avec un masque de 20 (tous les r
 \
 (Pour donner une idée, tester 16382 ip reviens par exemple à tester de l'ip 1.1.0.0 à environ l'ip 1.1.64.0)
 
-Voici comment se présente l'un de ces tests (sur terminal de commande):
+Voici comment se présente l'un de ces tests (aperçu du terminal de commande):
 
 ```
 $ sudo zmap -p 853 -r 5 -o test176_1_18.csv 176.131.76.200/18
@@ -210,13 +208,12 @@ Jun 08 09:48:20.479 [INFO] zmap: output module: csv
 
 ### **Conclusion et remarques sur cette première partie d'expérience:**
 
-\
-Jusque là, je choisi le range plus ou moins au hasard. Mais en fait il y a un peu 2 cas de figure de résultat:
+Jusque là, je choisi le range plus ou moins au hasard. Mais en fait il y a un peu 2 cas de figure de résultats:
 
 - soit je tombe sur un range ou il y a aucune ip (sur les 16382) avec le port 853 ouvert,
 - soit je me positionne là ou je sais qu'il y a des résultats (d'après les données mises à ma disposition par les auteurs de l'article) et je tombe sur des ranges qui sont probablement géré par un même AS (Autonomus System) qui va mettre ses serveurs DNS à la suite, et où les ips avec le port 853 ouvert sont donc toutes concentrées au même endroit et il y a beaucoup de résultats.
 
-Dans tous les cas, c'est vraiment peu représentatif et les tests ne sont pas globaux. De plus, immaginons que je test 6 ranges d'ip de 16382 (ce qui était prévu initialement), cela fait environ 100 000 ip testées sur 4,3 milliards soit une proportion de 2,3 * 10^-5.
+Dans tous les cas, c'est vraiment pas représentatif et les tests ne sont pas globaux (sur la totalité de "l'amplitude" des adresses ip). De plus, immaginons que je test 6 ranges d'ip de 16382 (ce qui était prévu initialement), cela fait environ 100 000 ip testées sur 4,3 milliards soit une proportion de 2,3 * 10^-5.
 
 Je vais donc commencer par réaliser des requêtes DoT sur ces résultats (2ème partie de l'expérience) puis, suite à ça, je tenterais de trouver un moyen de tester les ips sur un range plus global.
 
@@ -224,7 +221,7 @@ Je vais donc commencer par réaliser des requêtes DoT sur ces résultats (2ème
 ## 2eme partie de l’expérience : envoyer des requetes dot aux adresses ip récupérées dans les scripts
 
 \
-En lisant la documentation de getdns, l'API utilisée dans l'expérience originale, je me suis rendue compte qu'elle serait un peu difficile à prendre en main et j'ai cdonc herché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai donc trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin.
+En lisant la documentation de getdns, l'API utilisée dans l'expérience originale, je me suis rendue compte qu'elle serait un peu difficile à prendre en main et j'ai donc cherché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin.
 
 \
 Lien vers la documentation dnspython: https://dnspython.readthedocs.io/en/latest/query.html#tls

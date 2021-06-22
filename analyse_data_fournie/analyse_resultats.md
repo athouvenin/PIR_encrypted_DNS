@@ -5,6 +5,7 @@
 \
 Lien vers les jeux de données et le code source des auteurs de l'article : https://dnsencryption.info/imc19-doe.html
 
+Ces jeux de données correspondent aux résultats des @IP du monde qui répondent aux requêtes DoT.
 \
 Remarque: Vous trouverez ce jeux de données ainsi que leur analyses dans les fichiers au format xlsx (Exel) de ce répertoire.
 

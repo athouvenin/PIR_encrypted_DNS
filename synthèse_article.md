@@ -1,26 +1,26 @@
-# SYNTHÈSE: An End-to-End, Large-Scale Measurement of DNS-over-Encryption: How Far Have We Come? (Oct 2019)
+# SYNTHÈSE SUR L'ARTICLE: An End-to-End, Large-Scale Measurement of DNS-over-Encryption: How Far Have We Come? (Oct 2019)
 
 
-### Problématique : Où en est le deploiement et l'utilisation du DNS chiffré ?
+### Problématique : Où en est le déploiement et l'utilisation du DNS chiffré ? Est-ce une solution utilisée à grande échelle ?
 
 
-Le DNS (Domaine Name System) est aujourd’hui indispensable et omniprésent dans l’utilisation d’internet. En effet, une requête DNS se résoud en traduisant une url lisible pour l’utilisateur en adresse IP permettant de localiser le serveur hébergent la page web ou le service en quelques milisecondes à peine. Cependant, par son implémentation traditionnelle, les paquets DNS sont envoyés sans aucune encryption, rendant ces paquets vulnérables (à de la surveillance du traffic DNS, de la censure, de la manipulation des réponses DNS, de la redirection de traffic), nuisant à la sécurité et la vie privée des utilisateurs d’Internet.
-
-\
-C’est pourquoi, pour pallier à ce problème, des solutions ont été déployées depuis quelques années et plusieurs protocoles ont été proposés pour chiffrer les requêtes DNS entre les clients et les serveurs, que nous généralisont par l’appellation DNS chiffré (ou DoE pour DNS-over-Encryption). Parmis eux nous retrouveront notamment DoT (DNS-over-TLS), encryptant les requêtes DNS au niveau de la couche de transport (protocols TCP/UDP) et DoH (DNS-over-HTTPS), encryptant cette fois- ci les requêtes au niveau de la couche application (protocole HTTPS). L’efficacité des protocoles chiffrés fait d'ailleurs l'objet d'une des études menées au cours de l'article. 
+Le DNS (Domaine Name System) est aujourd’hui indispensable et omniprésent dans l’utilisation d’internet. En effet, une requête DNS se résoud en traduisant une url lisible et compréhensible pour l’utilisateur en une adresse IP permettant de localiser le serveur hébergent la page web ou le service en quelques milisecondes à peine. Cependant, par son implémentation traditionnelle, les paquets DNS sont envoyés sans être protégés, rendant ces paquets vulnérables (à de la surveillance du traffic DNS, de la censure, de la manipulation des réponses DNS, de la redirection de traffic), nuisant à la sécurité et la vie privée des utilisateurs d’Internet.
 
 \
-Le but de cet article, **An End-to-End, Large-Scale Measurement of DNS-over-Encryption: How Far Have We Come?** est en fait de faire un état lieu (où nous en sommes) du DNS encrypté à grande échelles. Et ce en s’appuyant sur les thèmes/questions suivantes :
+C’est pourquoi, pour pallier à ce problème, des solutions ont été déployées depuis quelques années et plusieurs protocoles ont été proposés pour chiffrer les requêtes DNS entre les clients et les serveurs, que nous généralisont par l’appellation DNS chiffré (ou DoE pour DNS-over-Encryption). Parmi eux nous retrouverons notamment DoT (DNS-over-TLS), encapsulant les requêtes DNS au niveau de la couche Transport (protocols TCP/UDP) et DoH (DNS-over-HTTPS), encapsulant cette fois-ci les requêtes au niveau de la couche Application (protocole HTTPS). L’efficacité des protocoles chiffrés est d'ailleurs l'un des objets d'étude dont les résultats sont présentés dans l'article.
+
+\
+Le but de cet article, **An End-to-End, Large-Scale Measurement of DNS-over-Encryption: How Far Have We Come?** est en fait de faire un état lieu (où nous en sommes) du DNS chiffré à grande échelle. Et ce en s’appuyant sur les thèmes/questions suivantes :
 
 1. Combien de fournisseurs offrent un service de DNS-over-Encryption (DoE) ? Est-ce que leur implémentation est sécurisée ?
-2. Y a-il des différences de performances pour l’utilisateur ? Y a-il des problème d’accès ou des erreurs causées à cause du DoE ?
+2. Y a-il des différences de performances pour l’utilisateur ? Y a-il des problèmes d’accès ou des erreurs causées à cause du DoE ?
 3. Aujourd’hui (fin 2019), concrètement, quelle est l’utilisation réelle du DoE à grande échelle ?
 
-Pour les chiffres, il est annoncé plus de 150 fournisseurs pour DoT et 17 pour DoH qui offrent un service de DNS-over-Encryption. Fin 2019, le volume de traffic de DoE reste petit par rapport au DNS traditionnel, malgré une hausse dans les derniers mois. Par exemple, Cloudflare DoT témoigne une augmentation de 56 % du trafic entre Juillet et Décemebre 2018.
+Pour les chiffres, il est annoncé plus de 150 fournisseurs pour DoT et 17 pour DoH qui offrent un service de DNS-over-Encryption. Fin 2019, le volume de trafic de DoE reste très très petit par rapport au DNS traditionnel:  (moins de 1% des résolveurs de DNS publics sont capables de répondre à une requête DoT). Malgré tout, on observe une hausse du trafic DoE ces derniers temps; par exemple, Cloudflare DoT témoigne une augmentation de 56 % du trafic entre Juillet et Décemebre 2018.
 
-Jusque là, les résultats montrent que la qualité du service fourni par le DoE est efficace et satisfesante en générale, malgré l’observation d’une légère hausse de latence en utilisant DoE. Cependant, il a été relevé des erreurs de configuration dans certains services ce qui cause des erreurs. D’autre part, ils se sont rendu compte qu’une part importante fournisseurs utilisaient des certificats SSL invalides ce qui risque de ruiner le processus d’autentification du serveur. 
+Jusque là, les résultats montrent que la qualité du service fourni par le DoE est efficace et satisfesante en générale, malgré l’observation d’une légère hausse de latence (peu significative) en utilisant DoE. Cependant, il a été relevé des problèmes de configuration dans certains services ce qui cause des erreurs. D’autre part, ils se sont rendu compte qu’une part importante fournisseurs utilisaient des certificats SSL invalides ce qui pouvait empêcher que le processus d’autentification du serveur se fasse.
 
-Pour conclure, les DoE et notament les protocols  DNS-over-TLS et  DNS-over-HTTPS sont une solution prometteuse pour résoudre les problème rencontrés par le trafic DNS non encrypté. Cependant, pour que cela puisse fonctionner au mieux, des efforts doivent être faits de la part des fournisseurs pour proposer une implémentation révisée pour qu’elle soit correcte et éviter les erreurs. Une généralisation à grande échelle de cette implémentation encryptée est finalement  largement recommandée et encouragée par les auteurs de l’article.
+Pour conclure, d'après l'article, les DoE et notament les protocols  DNS-over-TLS et  DNS-over-HTTPS sont une solution prometteuse pour résoudre les problème rencontrés par le trafic DNS non chiffré. Cependant, pour que cela puisse fonctionner au mieux, des efforts doivent être faits de la part des fournisseurs pour proposer une implémentation révisée pour qu’elle soit correcte et éviter les erreurs. Une généralisation à grande échelle de cette solution est finalement  largement recommandée et encouragée par les auteurs de l’article.
 
 \
 **Définitions/Vocabulaire supplémentaire**
