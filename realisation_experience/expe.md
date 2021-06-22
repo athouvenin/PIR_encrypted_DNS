@@ -218,15 +218,15 @@ Dans tous les cas, c'est vraiment pas représentatif et les tests ne sont pas gl
 Je vais donc commencer par réaliser des requêtes DoT sur ces résultats (2ème partie de l'expérience) puis, suite à ça, je tenterais de trouver un moyen de tester les ips sur un range plus global.
 
 
-## 2eme partie de l’expérience : envoyer des requetes dot aux adresses ip récupérées dans les scripts
+## 2eme partie de l’expérience : envoyer des requêtes DoT aux adresses ip récupérées dans les scripts
 
 \
-En lisant la documentation de getdns, l'API utilisée dans l'expérience originale, je me suis rendue compte qu'elle serait un peu difficile à prendre en main et j'ai donc cherché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin.
+En lisant la documentation de getdns, l'API utilisée dans l'expérience originale, je me suis rendue compte qu'elle serait un peu difficile à prendre en main en peu de temps et j'ai donc cherché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin.
 
 \
 Lien vers la documentation dnspython: https://dnspython.readthedocs.io/en/latest/query.html#tls
 
-### **1ere étape : écrire un script avec la librairie dnspython pour faire une dot query à UNE SEULE @IP**
+### **1ere étape : écrire un script avec la librairie dnspython pour faire une reqête DoT à UNE SEULE @IP**
 
 le script (doT_query.py):
 
@@ -375,7 +375,7 @@ with open(input_file, 'r') as read_obj:
             csv_writer.writerow(row)
 ```
 
-### **4ème étape: appliquer le script doT_query à chaque échantillon relevé concaténer**
+### **4ème étape: appliquer le script doT_query.py à chaque échantillon relevé avec le port 853 ouvert (échantillons concaténés au préalable)**
 
 Résultats: (fichier de la forme res103_doT.csv)
 
@@ -383,14 +383,16 @@ Résultats: (fichier de la forme res103_doT.csv)
 - Test avec les résultats de 185.228.168.0/18: 1021 réponses /1063 (96%)
 - Test avec les résultats de 210.128.97.200: 6 réponses /6 (100%)
 
+Remarque: Pour rappel, avec le set de 176.131.76.200/18 nous n'avions aucune ip avec le port DoT ouvert, donc ce n'est pas la peine d'appliquer ce fichier en entrée du script, car on sait que l'on aura pas de résultats.
+
 \
 Nous conclueront sur ces résultats une fois que nous aurons également les résultats avec des tests plus globaux et représentatifs.
 
-## 3ème partie: chercher à réaliser des tests sur des ranges plus globaux et représentifs
+## 3ème partie: chercher à réaliser des tests sur des ranges plus globaux et représentifs (suite aux soucis évoqués à la fin de la partie 1)
 
-### *1ère possibilité* : tester toutes les @ip en fesant un saut de x @ip entre chaque ip testé
+#### *1ère possibilité* : tester toutes les @ip en fesant un saut de x @ip entre chaque ip testé
 
-Tester 100 000 @ip en limitant le débit à 5 requêtes/seconde devrait prendre environ 5h30. Je décide donc de tester environs 100 000 réparties sur la totalité du range des adresses ipv4. 
+Tester 100 000 @ip en limitant le débit à 5 requêtes/seconde devrait prendre environ 5h30. Je décide donc de tester environ 100 000 @ip réparties sur la totalité du range des adresses ipv4. 
 
 La totalité des @ip = 4,3 x 10⁹
 
@@ -468,7 +470,7 @@ Jun 13 20:11:37.149 [INFO] zmap: output module: csv
 \
 Cette possibilité testant 107 000 @ip prend environ 5h20 à s'executeur. Une fois fait, le fichier de résultats contients seulement **75 @ip avec le port 853 ouvert**. On envoie ensuite des requêtes DoT à ces résultats de la même manière que précédement et **aucune ip ne répond (0%)**.
 
-### *2ème possibilité* : tester toutes les ips du monde sans limiter le débit :
+#### *2ème possibilité* : tester toutes les ips du monde sans limiter le débit :
 
 Avec cette possibilité qui envoie des centaines de milliers de requêtes /seconde, d'une part la box internet est très sollicité et donc beaucoup de paquets seront perdues, et j'effectue ce teste en connassance de cause. Mais il apparait pour moi comme un bon moyen de tester des @ip de manière vraiment aléatoire en couvrant toute l'amplitudes des adresses ipv4.
 
