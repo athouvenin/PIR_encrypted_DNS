@@ -104,7 +104,7 @@ Proportion moyenne des certificats ssl valides (j'ai comptabilisé les 'ok'): 91
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
-![](./captures/gra_%c_ok02.png)
+![](./captures/gra_pc_ok02.png)
 
 \
 **Dataset du 01/05/2019**
@@ -113,7 +113,7 @@ Proportion moyenne des certificats ssl valides: 91%
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
-![](./captures/gra_%c_ok05.png)
+![](./captures/gra_pc_ok05.png)
 
 \
 **Dataset du 01/07/2020**
@@ -122,7 +122,7 @@ Proportion moyenne des certificats ssl valides: 77,4%
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
-![](./captures/gra_%c_ok07.png)
+![](./captures/gra_pc_ok07.png)
 
 \
 **Observations / Remarques / Conclusion**
