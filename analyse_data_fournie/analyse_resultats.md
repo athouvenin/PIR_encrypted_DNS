@@ -38,10 +38,8 @@ Pour chaque jeu de données (j'en ai analysé 3), 4 évaluations ont été faite
 \
 **Dataset du 01/02/2019** : 1198
 
-\
 **Dataset du 01/05/2019** : 2053
 
-\
 **Dataset du 01/07/2020** : 7062
 
 \
@@ -56,12 +54,12 @@ Par ailleurs, nous constatons l'augmentation du nombre avec le temps, notament e
 \
 **Dataset du 01/02/2019**
 
-48 pays dans le monde contiennent au moins un résolveur de DoT.
+- 48 pays dans le monde contiennent au moins un résolveur de DoT.
 
 \
 **Dataset du 01/05/2019**
 
-55 pays dans le monde contiennent au moins un résolveur de DoT.
+- 55 pays dans le monde contiennent au moins un résolveur de DoT.
 
 \
 **Comparaison avec le tableau**
@@ -83,7 +81,7 @@ En comparant, on retrouve globalement les mêmes valeurs, c'est donc cohérent.
 \
 **Dataset du 01/07/2020**
 
-52 pays dans le monde contiennent au moins un résolveur de DoT.
+- 52 pays dans le monde contiennent au moins un résolveur de DoT.
 
 Comme pour les deux datasets précédents, voici le top 15 des pays contenant le plus de résolveur DoT
 
@@ -92,11 +90,6 @@ Comme pour les deux datasets précédents, voici le top 15 des pays contenant le
 \
 On remarque l'absence de l'Irelande dans ce nouveau top, alors qu'il était le grand leader en 2019 sur les différents datasets étudiés. Apart ce résultat, on retrouve les mêmes pays que précédement, même si le classement est un peu modifié.
 
-\
-**Observations / Remarques / Conclusion**
-
-**[A COMPLÉTER]**
-
 ### 3) la proportion de certificat ssl 'ok'
 
 On rappelle que la défition de ce qu'est un certificat SSL ainsi que les raisons pour lesquelles ce dernier pourrait être invalide sont données dans le document synthèse_article.md.
@@ -104,7 +97,7 @@ On rappelle que la défition de ce qu'est un certificat SSL ainsi que les raison
 \
 **Dataset du 01/02/2019**
 
-Proportion moyenne des certificats ssl valides (j'ai comptabilisé les 'ok'): 91%
+- Proportion moyenne des certificats ssl valides (j'ai comptabilisé les 'ok'): 91%
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
@@ -113,7 +106,7 @@ Et les résultats de cette proportion par pays est représentée sur le graphe q
 \
 **Dataset du 01/05/2019**
 
-Proportion moyenne des certificats ssl valides: 91%
+- Proportion moyenne des certificats ssl valides: 91%
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
@@ -122,7 +115,7 @@ Et les résultats de cette proportion par pays est représentée sur le graphe q
 \
 **Dataset du 01/07/2020**
 
-Proportion moyenne des certificats ssl valides: 77,4%
+- Proportion moyenne des certificats ssl valides: 77,4%
 
 Et les résultats de cette proportion par pays est représentée sur le graphe qui suit: (les pays sont ordonnées de manière décroissantes par rapport au nombre de résolveurs DoT qu'ils possèdent)
 
@@ -131,11 +124,13 @@ Et les résultats de cette proportion par pays est représentée sur le graphe q
 \
 **Observations / Remarques / Conclusion**
 
-**[A COMPLÉTER]**
+Dans un premier temps, on peut relever que par exemple, le Brésil (BR) compte parmi les top pays possédant le plus de résolveurs DoT avec 22 résolveurs en février 2019 mais plus de 85% de certificats invalides. Le taux de certificats invalides tend à baisser au cours du temps mais reste particulièrement élévé.
+
+En remarques plus globales, on voit que le taux de certificat valide baisse beaucoup pour le jeux de données de 2020 et on peut se demander pourquoi. Cela s'explique par le fait que les certificats ssl sont beaucoup plus auto-signés. Un certificat auto-signé peut être valide mais ce n'est pas forcément le cas; pour réaliser mes analyses, j'ai considéré que tous les certificats auto-signés étaient forcément invalides alors que ce n'est pas forcément le cas.
+
+D'autre part, il a été annoncé 25% de certificats invalides dans l'article de référence. Or, après nos résultats présentés ci dessus, nous serion splus à 9% pour les jeux de données parus avant sortie de l'article. Nous pouvons expliquer ces différences avec les résultats de l'article parce que j'ai considéré dans mon analyse que tous les certificats auto-signés étaient forcément invalides. 
 
 ### 4) le nombre de résolveurs pour chaque Nom de Domaine (Common Name)
-
-**[AJOUTER CAPTURE HISTOGRAMME ARTICLE AU COURS DU TEMPS]**
 
 \
 **Dataset du 01/02/2019**
@@ -163,4 +158,9 @@ Dns.iij.jp : 2%
 \
 **Observations / Remarques / Conclusion**
 
+A la page 6 de l'article, nous trouvons l'histogramme suivant, représentant les résolvers DoT les plus communs et leur évolution dans le temps.
+
+![](./captures/histo.png)
+
+Nous, ce que nous avons évalué 
 
