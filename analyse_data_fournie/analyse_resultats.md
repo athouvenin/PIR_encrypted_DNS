@@ -90,12 +90,16 @@ Comme pour les deux datasets précédents, voici le top 15 des pays contenant le
 ![Top 15 des pays avec le plus de résolveurs DoT en juillet 2020](./captures/tab_nb_pays07.PNG)
 
 \
-On remarque l'absence de l'irelande dans ce nouveau top, alors qu'il était le grand leader en 2019 sur les différents datasets étudiés. Apart ce résultat, on retrouve les mêmes pays que précédement, même si le classement est un peu modifié.
+On remarque l'absence de l'Irelande dans ce nouveau top, alors qu'il était le grand leader en 2019 sur les différents datasets étudiés. Apart ce résultat, on retrouve les mêmes pays que précédement, même si le classement est un peu modifié.
 
 \
 **Observations / Remarques / Conclusion**
 
+**[A COMPLÉTER]**
+
 ### 3) la proportion de certificat ssl 'ok'
+
+On rappelle que la défition de ce qu'est un certificat SSL ainsi que les raisons pour lesquelles ce dernier pourrait être invalide sont données dans le document synthèse_article.md.
 
 \
 **Dataset du 01/02/2019**
@@ -127,7 +131,11 @@ Et les résultats de cette proportion par pays est représentée sur le graphe q
 \
 **Observations / Remarques / Conclusion**
 
+**[A COMPLÉTER]**
+
 ### 4) le nombre de résolveurs pour chaque Nom de Domaine (Common Name)
+
+**[AJOUTER CAPTURE HISTOGRAMME ARTICLE AU COURS DU TEMPS]**
 
 \
 **Dataset du 01/02/2019**
@@ -155,4 +163,4 @@ Dns.iij.jp : 2%
 \
 **Observations / Remarques / Conclusion**
 
-**Dataset du 01/02/2019**
+
