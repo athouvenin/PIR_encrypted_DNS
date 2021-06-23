@@ -4,8 +4,8 @@
 
 \
 **Objectifs:** 
-- retester 1 ou 2 ans plus tard les adresses ip avec port 853 ouvert + répondant aux requêtes DoT
-- tenter d'analyser les résultats obtenus et les comparer aux résultats fournis (car les jeux de données disponibles correspondent aux résultats des @IP du monde qui répondent aux requêtes DoT)
+- retester 1 ou 2 ans plus tard les adresses IPavec port 853 ouvert + répondant aux requêtes DoT
+- tenter d'analyser les résultats obtenus et les comparer aux résultats fournis (car les jeux de données disponibles correspondent aux résultats des @IPdu monde qui répondent aux requêtes DoT)
 
 \
 Lien vers les jeux de données et le code source des auteurs de l'article : https://dnsencryption.info/imc19-doe.html
@@ -13,9 +13,9 @@ Lien vers les jeux de données et le code source des auteurs de l'article : htt
 Dans l'article à la section "3.1 Methodology", page 5, nous trouvons l'extrait suivant:
 
 _"In practice, we first use ZMap to discover all IPv4 addresses with port 853 open (using the zmap -p 853 command), and then probe the addresses with DoT queries of a domain registered by us, using getdns API. In the first stage, our scan originates from
-3 IP addresses in China and the US (on cloud platforms), and we configure the tool to cover the entire IPv4 address space in a random order. For addresses with port 853 open, only those successfully responding to our DoT queries are regarded as open DoT resolvers."_
+3 IPaddresses in China and the US (on cloud platforms), and we configure the tool to cover the entire IPv4 address space in a random order. For addresses with port 853 open, only those successfully responding to our DoT queries are regarded as open DoT resolvers."_
 
-C'est donc cette partie de l'expérience que nous allons tenter de réaliser à notre tour. **L'objectif de cette expérience est de rescenser les adresses ip qui répondent aux requêtes DoT.**
+C'est donc cette partie de l'expérience que nous allons tenter de réaliser à notre tour. **L'objectif de cette expérience est de rescenser les adresses IP qui répondent aux requêtes DoT.**
 
 \
 Pour commencer, j'ai regardé les données et le code source étant à ma disposition (suivre le lien donné plus haut): 
@@ -35,10 +35,10 @@ les logiciels à utiliser
 - Zmap : network scanning – savoir si le port du DoT (853) est ouvert pour quelle @IP (analyse de réseau)
 - getdns : API pour faire des requêtes DoT pour vérif que les @IP avec le port 853 ouvert sont bien capables de répondre aux requêtes DoT.
 
-## Première partie de l'expérience: trouver les ip avec le port 853 ouvert
+## Première partie de l'expérience: trouver les IP avec le port 853 ouvert
 
 \
-**Le port 853 est le port assigné au DNS-over-TLS (DoT)**. L'intérêt de cette première partie d'expérience est de nous faire gagner beaucoup de temps sur la deuxième partie qui consiste à envoyer des requêtes DoT à des @ip pour voir si elles sont capables d'y répondre.
+**Le port 853 est le port assigné au DNS-over-TLS (DoT)**. L'intérêt de cette première partie d'expérience est de nous faire gagner beaucoup de temps sur la deuxième partie qui consiste à envoyer des requêtes DoT à des @IP pour voir si elles sont capables d'y répondre.
 
 Le github de Zmap (le wiki est dans l'onglet wiki sur github directement) : https://github.com/zmap/zmap
 
@@ -72,10 +72,10 @@ Jun 10 16:44:48.406 [INFO] zmap: completed
 ça peut mettre un peu de temps à répondre mais au bout de quelque envois, le hitrate passe à 100 % (comme on peut le voir sur la capture du terminal), ça fonctionne !
 
 \
-2. **Script python pour générer les adresses ip puis faire le scan avec zmap**
+2. **Script python pour générer les adresses IP puis faire le scan avec zmap**
 
 \
-Ecriture d'un script (script_ip.py) qui génère les adresses ips et les écrit dans un fichier texte. On pourra ensuite lire ces adresses ip une par une et leur appliquer la commande z-map à l'aide d'un deuxième script.
+Ecriture d'un script (script_ip.py) qui génère les adresses IP et les écrit dans un fichier texte. On pourra ensuite lire ces adresses IP une par une et leur appliquer la commande z-map à l'aide d'un deuxième script.
 
 ```
 import ipaddress
@@ -96,7 +96,7 @@ with open('all_ips_0.txt', 'w') as f:
 print('finished')
 ```
 
-le soucis : générer et requeter toutes les adresses ip du monde, ça prend beaucoup de temps !
+le soucis : générer et requeter toutes les adresses IP du monde, ça prend beaucoup de temps !
 
 \
 3. **Executer zmap pour des ranges d'ip**
@@ -108,7 +108,7 @@ la commande en question :
 ```  sudo zmap -p 853 -o test.csv 1.1.1.0/24```
 
 \
-En spécifiant le masque (ici /24 par exemple), je spécifie sur quel range d'ip (le nombre d'ip testées à la suite) je veux effectuer mon test. Je n'ai donc plus besoin de générer dans un fichier le range d'adresse IP à tester, et seules les adresses avec le port 853 ouvert seront écrite dans le fichier de sortie (appelé test.csv dans la commande d'exemple ci dessus).
+En spécifiant le masque (ici /24 par exemple), je spécifie sur quel range d'IP (le nombre d'IP testées à la suite) je veux effectuer mon test. Je n'ai donc plus besoin de générer dans un fichier le range d'adresse IP à tester, et seules les adresses avec le port 853 ouvert seront écrite dans le fichier de sortie (appelé test.csv dans la commande d'exemple ci dessus).
 
  Ci dessous les valeurs correspondantes des masques utilisés:
 
@@ -143,10 +143,10 @@ $ cat test.csv
 1.1.1.3
 ```
 
-Dans le cas testé ci-dessus, 3 @ip sur les 254 testées (entre 1.1.1.1 et 1.1.1.255) ont le port 853 ouvert.
+Dans le cas testé ci-dessus, 3 @IP sur les 254 testées (entre 1.1.1.1 et 1.1.1.255) ont le port 853 ouvert.
 
 \
-En effectuant plusieurs test, je me suis cependant rendue compte que les résultats pouvaient être assez aléatoires. Par exemple pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro ips dans le fichier résultat, parfois seulement 2 sur les 3. Et cette irrégularité pourrait s'expliquer par un filtrage de mes requetes par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyées par seconde (et cela peut monter à plusieurs dizaines voir centaines de milliers selon la taille du range testé). Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes. Autre raison, les paquets sont sûrement envoyés avec un protocole UDP pour augmenter la vitesse d'exécution, mais du coup les paquets peuvent être perdus.
+En effectuant plusieurs test, je me suis cependant rendue compte que les résultats pouvaient être assez aléatoires. Par exemple pour le test réalisé ci-dessus avec 1.1.1.1/24, parfois il y avait zéro IP dans le fichier résultat, parfois seulement 2 sur les 3. Et cette irrégularité pourrait s'expliquer par un filtrage de mes requetes par mon FAI. En effet, dans le test effectué, nous voyons que 256 requetes sont envoyées par seconde (et cela peut monter à plusieurs dizaines voir centaines de milliers selon la taille du range testé). Ce débit élevé pourrait être détecté comme activité anormale pour mon fai qui filtrerait alors mes requetes. Autre raison, les paquets sont sûrement envoyés avec un protocole UDP pour augmenter la vitesse d'exécution, mais du coup les paquets peuvent être perdus.
 
 Pour plus de fiabilité, j'ai donc cherché à limiter ce débit; on peut le faire directement dans la commande zmap en ajoutant -r:
 
@@ -158,28 +158,28 @@ Ici j'ai utilisé -r 5 pour limiter le débit à 5 requêtes par secondes (le d�
 
 Si on lance la commande présentée précédement, le test zmap met 14mn à s'executer (pour un masque de 20); ainsi, pour un débit limité à 5 requêtes par secondes et les masques proposés au dessus, les durées de test zmap sont les suivants:
 
-- Pour tester 4094 ips (/20) cela prend 14 mn
-- Pour tester 81190 ips (/19) cela prend 28 mn
-- Pour tester 16382 ips (/18) cela prend 57 mn
+- Pour tester 4094 IP (/20) cela prend 14 mn
+- Pour tester 81190 IP (/19) cela prend 28 mn
+- Pour tester 16382 IP (/18) cela prend 57 mn
 
 Pour vérifier, je réalise 2 tests pour le range 1.1.1.0/20 avec un débit (rate) limité à 5/s. Puis j'effectue exactement la même chose sans limiter le débit (cela se fait en quelques secondes contre 2 x 14mn pour le test limitant le débit. Je compare ensuite les résultats des différents tests. Dans le premier cas, nous obtenons la même chose tandis que dans le deuxième cas, les résultats sont beaucoup plus aléatoires. Je continuerais donc à limiter le débit pour la suite de mon expérience.
 
 \
-Suite à celà, je commence à effectuer des tests sur des ranges d'ip un peu aléatoirement: je commence par le range 101.101.101.101/20 (commnade: sudo zmap -p 853 -r 5 -o test101_20.csv 101.101.101.101/20). A la fin du test, mon fichier de sortie test101_20.csv en ressort vide: aucune ip testé n'a le port 853 ouvert.
+Suite à celà, je commence à effectuer des tests sur des ranges d'IP un peu aléatoirement: je commence par le range 101.101.101.101/20 (commnade: sudo zmap -p 853 -r 5 -o test101_20.csv 101.101.101.101/20). A la fin du test, mon fichier de sortie test101_20.csv en ressort vide: aucune IP testé n'a le port 853 ouvert.
 
 \
-Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue **chaque test 3 fois sur le même range** pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grâce à Exel en supprimant les doublons. Une fois que j'aurais testé plusieurs range d'IP comme décrit juste avant, je serais prête à passer à la deuxième partie de l'expérience: vérifier si les ips récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
+Je décide de passer à un masque /18 (test sur 16382 ips). J'effectue **chaque test 3 fois sur le même range** pour améliorer la qualité de mes résultats. Je concatène ensuite mes 3 fichiers de sortie pour le même range grâce à Exel en supprimant les doublons. Une fois que j'aurais testé plusieurs range d'IP comme décrit juste avant, je serais prête à passer à la deuxième partie de l'expérience: vérifier si les IP récoltées dans le fichier de sortie (qui ont le port 853 ouvert) répondent bien à une requête DoT.
 
 \
-J'ai donc testé 4 ranges d'ips différentes avec un masque de 18 (tous les fichiers de résultats sont trouvables dans le dossier "TESTS" de ce répertoire):
+J'ai donc testé 4 ranges d'IP différentes avec un masque de 18 (tous les fichiers de résultats sont trouvables dans le dossier "TESTS" de ce répertoire):
 
-- Test avec 103.205.143.68/18: on trouve 1533 ips différentes avec le port 853 ouvert après les 3 tests (/16382 à priori, ça fait 9,35 %)
+- Test avec 103.205.143.68/18: on trouve 1533 IP différentes avec le port 853 ouvert après les 3 tests (/16382 à priori, ça fait 9,35 %)
 - Test avec 176.131.76.200/18: on trouve aucuns résultats (0%)
-- Test avec 185.228.168.0/18: on trouve 1064 ips différentes (6,49%)
-- Test avec 210.128.97.200: on trouve 6 ips différentes (0,004%)
+- Test avec 185.228.168.0/18: on trouve 1064 IP différentes (6,49%)
+- Test avec 210.128.97.200: on trouve 6 IP différentes (0,004%)
 
 \
-(Pour donner une idée, tester 16382 ip reviens par exemple à tester de l'ip 1.1.0.0 à environ l'ip 1.1.64.0)
+(Pour donner une idée, tester 16382 IP reviens par exemple à tester de l'IP 1.1.0.0 à environ l'IP 1.1.64.0)
 
 Voici comment se présente l'un de ces tests (aperçu du terminal de commande):
 
@@ -210,15 +210,15 @@ Jun 08 09:48:20.479 [INFO] zmap: output module: csv
 
 Jusque là, je choisi le range plus ou moins au hasard. Mais en fait il y a un peu 2 cas de figure de résultats:
 
-- soit je tombe sur un range ou il y a aucune ip (sur les 16382) avec le port 853 ouvert,
-- soit je me positionne là ou je sais qu'il y a des résultats (d'après les données mises à ma disposition par les auteurs de l'article) et je tombe sur des ranges qui sont probablement géré par un même AS (Autonomus System) qui va mettre ses serveurs DNS à la suite, et où les ips avec le port 853 ouvert sont donc toutes concentrées au même endroit et il y a beaucoup de résultats.
+- soit je tombe sur un range ou il y a aucune IP (sur les 16382) avec le port 853 ouvert,
+- soit je me positionne là ou je sais qu'il y a des résultats (d'après les données mises à ma disposition par les auteurs de l'article) et je tombe sur des ranges qui sont probablement géré par un même AS (Autonomus System) qui va mettre ses serveurs DNS à la suite, et où les IP avec le port 853 ouvert sont donc toutes concentrées au même endroit et il y a beaucoup de résultats.
 
-Dans tous les cas, c'est vraiment pas représentatif et les tests ne sont pas globaux (sur la totalité de "l'amplitude" des adresses ip). De plus, immaginons que je test 6 ranges d'ip de 16382 (ce qui était prévu initialement), cela fait environ 100 000 ip testées sur 4,3 milliards soit une proportion de 2,3 * 10^-5.
+Dans tous les cas, c'est vraiment pas représentatif et les tests ne sont pas globaux (sur la totalité de "l'amplitude" des adresses ip). De plus, immaginons que je test 6 ranges d'IP de 16382 (ce qui était prévu initialement), cela fait environ 100 000 IP testées sur 4,3 milliards soit une proportion de 2,3 * 10^-5.
 
-Je vais donc commencer par réaliser des requêtes DoT sur ces résultats (2ème partie de l'expérience) puis, suite à ça, je tenterais de trouver un moyen de tester les ips sur un range plus global.
+Je vais donc commencer par réaliser des requêtes DoT sur ces résultats (2ème partie de l'expérience) puis, suite à ça, je tenterais de trouver un moyen de tester les IP sur un range plus global.
 
 
-## 2eme partie de l’expérience : envoyer des requêtes DoT aux adresses ip récupérées dans les scripts
+## 2eme partie de l’expérience : envoyer des requêtes DoT aux adresses IP récupérées dans les scripts
 
 \
 En lisant la documentation de getdns, l'API utilisée dans l'expérience originale, je me suis rendue compte qu'elle serait un peu difficile à prendre en main en peu de temps et j'ai donc cherché quelque chose de plus simple qui pourrait faire la même chose afin de gagner du temps. J'ai trouvé une librairie python: **dnspython** qui semblait convenir à l'utilisation dont j'avais besoin.
@@ -265,9 +265,9 @@ google.com. 290 IN A 142.250.187.238
 sinon, no answer
 ```
 
-### **2eme étape : lire les ip du fichier csv et les tester. Stocker le résultat dans la « 2eme colonne » du fichier**
+### **2eme étape : lire les IP du fichier csv et les tester. Stocker le résultat dans la « 2eme colonne » du fichier**
 
-Adaptation du script pour qu'il prenne en argument le fichier d'entrée (contenant les @ip à tester) et le fichier de sortie (contenant ces @ip avec la réponse obtenue à la requête doT):
+Adaptation du script pour qu'il prenne en argument le fichier d'entrée (contenant les @IP à tester) et le fichier de sortie (contenant ces @IP avec la réponse obtenue à la requête doT):
 
 ```
 import dns.query
@@ -281,7 +281,7 @@ def check_DoT(ip):
     mes = dns.message.make_query(domain, dns.rdatatype.A)
 
     try:
-        res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
+        res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'IP pour répondre
         return 'respond to DoT query'
         
     except dns.exception.Timeout:
@@ -313,7 +313,7 @@ La forme des résultats sur le fichier de sortie (format csv)(test avec le fichi
 210.128.97.219,respond to DoT query,respond to DoT query
 ```
 
-Remarque: certaines @ip bloquaient le script et généraient des erreurs car elles fesait partie de la blacklist (voir la "capture terminal ci-après); j'ai donc levé une deuxième exception dans le script afin de résoudre ce problème.
+Remarque: certaines @IP bloquaient le script et généraient des erreurs car elles fesait partie de la blacklist (voir la "capture terminal ci-après); j'ai donc levé une deuxième exception dans le script afin de résoudre ce problème.
 
 ```
 $ python3 doT_query.py tout103.csv res103_doT.csv
@@ -321,7 +321,7 @@ Traceback (most recent call last):
   File "doT_query.py", line 34, in <module>
     row.append(check_DoT(row[0]))
   File "doT_query.py", line 16, in check_DoT
-    res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
+    res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'IP pour répondre
   File "/home/agnes/.local/lib/python3.8/site-packages/dns/query.py", line 809, in tls
     _tls_handshake(s, expiration)
   File "/home/agnes/.local/lib/python3.8/site-packages/dns/query.py", line 737, in _tls_handshake
@@ -349,7 +349,7 @@ def check_DoT(ip):
     mes = dns.message.make_query(domain, dns.rdatatype.A)
 
     try:
-        res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'ip pour répondre
+        res = dns.query.tls(mes, ip, timeout=2) #on laisse 2 secondes à l'IP pour répondre
         return 'DoT query answer'
         
     except dns.exception.Timeout:
@@ -383,20 +383,20 @@ Résultats: (fichier de la forme res103_doT.csv)
 - Test avec les résultats de 185.228.168.0/18: 1021 réponses /1063 (96%)
 - Test avec les résultats de 210.128.97.200: 6 réponses /6 (100%)
 
-Remarque: Pour rappel, avec le set de 176.131.76.200/18 nous n'avions aucune ip avec le port DoT ouvert, donc ce n'est pas la peine d'appliquer ce fichier en entrée du script, car on sait que l'on aura pas de résultats.
+Remarque: Pour rappel, avec le set de 176.131.76.200/18 nous n'avions aucune IP avec le port DoT ouvert, donc ce n'est pas la peine d'appliquer ce fichier en entrée du script, car on sait que l'on aura pas de résultats.
 
 \
 Nous conclueront sur ces résultats une fois que nous aurons également les résultats avec des tests plus globaux et représentatifs.
 
 ## 3ème partie: chercher à réaliser des tests sur des ranges plus globaux et représentifs (suite aux soucis évoqués à la fin de la partie 1)
 
-#### *1ère possibilité* : tester toutes les @ip en fesant un saut de x @ip entre chaque ip testé
+#### *1ère possibilité* : tester toutes les @IP en fesant un saut de x @IP entre chaque IP testé
 
-Tester 100 000 @ip en limitant le débit à 5 requêtes/seconde devrait prendre environ 5h30. Je décide donc de tester environ 100 000 @ip réparties sur la totalité du range des adresses ipv4. 
+Tester 100 000 @IP en limitant le débit à 5 requêtes/seconde devrait prendre environ 5h30. Je décide donc de tester environ 100 000 @IP réparties sur la totalité du range des adresses ipv4. 
 
-La totalité des @ip = 4,3 x 10⁹
+La totalité des @IP = 4,3 x 10⁹
 
-4,3 x 10⁹/40 000 = 107 000 donc on va tester une @ip toutes les 40 000.
+4,3 x 10⁹/40 000 = 107 000 donc on va tester une @IP toutes les 40 000.
 
 \
 On a la possibilité avec zmap de lire un fichier d’entrée avec la commande : --whitelist-file. Cela se présente comme ceci:
@@ -425,14 +425,14 @@ Jun 13 21:28:49.003 [INFO] zmap: completed
 ```
 
 \
-On reprend alors le script python (script_ip) que l’on a fait initialement qui générait les adresses ip dans un fichier, on le modifie pour qu'il fasse des sauts de 40 000 ip à chaque itération puis on donnera ce fichier à zmap.
+On reprend alors le script python (script_ip) que l’on a fait initialement qui générait les adresses IP dans un fichier, on le modifie pour qu'il fasse des sauts de 40 000 IP à chaque itération puis on donnera ce fichier à zmap.
 
 ```
 import ipaddress
 import os
 
 
-max_ip = 107374 # (2^32 / 40000, car on fait une ip toutes les 40 000)
+max_ip = 107374 # (2^32 / 40000, car on fait une IP toutes les 40 000)
 une_ip = ipaddress.ip_address('0.0.0.0')
 
 with open('all_ips_40.txt', 'w') as f:
@@ -468,33 +468,37 @@ Jun 13 20:11:37.149 [INFO] zmap: output module: csv
 ```
 
 \
-Cette possibilité testant 107 000 @ip prend environ 5h20 à s'executeur. Une fois fait, le fichier de résultats contients seulement **75 @ip avec le port 853 ouvert**. On envoie ensuite des requêtes DoT à ces résultats de la même manière que précédement et **aucune ip ne répond (0%)**.
+Cette possibilité testant 107 000 @IP prend environ 5h20 à s'executeur. Une fois fait, le fichier de résultats contients seulement **75 @IP avec le port 853 ouvert**. On envoie ensuite des requêtes DoT à ces résultats de la même manière que précédement et **aucune IP ne répond (0%)**.
 
-#### *2ème possibilité* : tester toutes les ips du monde sans limiter le débit :
+#### *2ème possibilité* : tester toutes les IP du monde sans limiter le débit :
 
-Avec cette possibilité qui envoie des centaines de milliers de requêtes /seconde, d'une part la box internet est très sollicité et donc beaucoup de paquets seront perdues, et j'effectue ce teste en connassance de cause. Mais il apparait pour moi comme un bon moyen de tester des @ip de manière vraiment aléatoire en couvrant toute l'amplitudes des adresses ipv4.
+Avec cette possibilité qui envoie des centaines de milliers de requêtes /seconde, d'une part la box internet est très sollicité et donc beaucoup de paquets seront perdues, et j'effectue ce teste en connassance de cause. Mais il apparait pour moi comme un bon moyen de tester des @IP de manière vraiment aléatoire en couvrant toute l'amplitudes des adresses ipv4.
 
 J'utilise donc simplement la commande qui suit et attends qu'elle aie fini de s'executer; cela prend un peu moins de 3h.
 
 ```sudo zmap -p 853  -o test_all1.csv 0.0.0.0/0```
 
 \
-**Nous obtenons 1454 résultats**, donc 1454 @ip avec le port 853 ouvert. Nous appliquons ensuite les requêtes DoT à ces résultats, toujours de la même façon que précédement et nous avons **5 réponses, soit 0,0034%**.
+**Nous obtenons 1454 résultats**, donc 1454 @IP avec le port 853 ouvert. Nous appliquons ensuite les requêtes DoT à ces résultats, toujours de la même façon que précédement et nous avons **5 réponses, soit 0,0034%**.
 
 \
-**Conclusion sur les réponses aux requêtes DoT des @ips avec le port 853 ouvert:**  **[A COMPLETER]**, dans l'article c'est dit
+**Conclusion sur les réponses aux requêtes DoT des @IP avec le port 853 ouvert:**  
 
-Parmis les tests faits, surtout les derniers qui sont un peu plus représentatifs, nous observons très peu de résultats, que ce soit pour le nombre d'@ip avec le port 853 ouvert et encore plus le nombre d'@ip qui répondent aux requêtes DoT. C'était plutôt attendu, et ces résultats sont cohérents avec ce qui a été présenté dans l'article de référence. (On rappelle que d'après l'article moins de 1% des requêtes DNS du monde sont chiffrées).
+Parmis les tests faits, surtout les derniers qui sont un peu plus représentatifs, nous observons très peu de résultats, que ce soit pour le nombre d'@IP avec le port 853 ouvert et encore plus le nombre d'@IP qui répondent aux requêtes DoT. C'était plutôt attendu, et ces résultats sont cohérents avec ce qui a été présenté dans l'article de référence. (On rappelle que d'après l'article moins de 1% des requêtes DNS du monde sont chiffrées).
 
 Cependant, nous avons bien des résultats "positifs", dans le sens où nous avons trouvé des hosts qui répondent aux requêtes DoT, ce qui prouvent bien que ces serveurs DoT sont présents et existent vraiment.
 
-En outre, nous pouvons remarquer qu'il y a quand même beaucoup de host (ou d'@ip) qui ne répondent pas aux requêtes DoT alors qu'elles ont le port 853 ouvert. Nous pouvons alors nous demander pourquoi, et quels peuvent être les autres utilisation de ce port?
-
-Tout d'abord, le port 853 est contenu dans le range des ports normés, c'est à dire des ports spécifiques réservé à une utilité, en l'occurence à écouter le traffic Dot pour le port 853. Les raisons qui pourraient alors expliquer pourquoi les hosts ont le port 853 ouvert mais ne répondent pas aux requêtes DoT peuvent être parce que le serveur à qui ont effectue la requête filtre mes requêtes, par exemple parce que l'ip de ma machine n'appartient pas à un range d'ip autorisé par le serveur. Cela peut aussi être une erreur du coté du serveur, soit parce qu'il reçoit trop de straffic, soit à cause d'un problème de configuration. Enfin, il est également possible que le port 853 du serveur soit ouvert pour une autre utilisation, à ce moment spécifique à ce serveur, et configuré manuellement comme tel, auquel cas il ne peut pas répondre aux requêtes DoT.
-
----------------------
-
-From each Internet-
+En outre, nous pouvons remarquer qu'il y a quand même beaucoup de host (ou d'@ip) qui ne répondent pas aux requêtes DoT alors qu'elles ont le port 853 ouvert. Ce résultat est d'ailleurs mentionné dans l'article; page 5, nous trouvons l'extrait suivant: *"From each Internet-
 wide scan, we discover 2 to 3 million hosts with port 853 open (e.g.,
 356M on Feb 1 and 230M on May 1), yet a vast majority of them
-do not provide DoT (i.e., they cause getdns errors). ~0,06 % d'après l'article (1,5 K / 2,5 M)
+do not provide DoT (i.e., they cause getdns errors). As shown in
+Figure 3, over 1.5K open DoT resolvers are discovered in each scan,
+significantly more than the public resolver lists."* 
+
+Or 1,5 k de résolveurs DoT ouverts sur 2 à 3 M de hosts (mettons 2,5 M) revient à une proportion de 0,06%. Avec le dernier scan fait sur toutes les IP du monde sans limites de débit, nous trouvions plus haut une proportion de 0,0034% d'IP répondant aux requêtes DoT en ayant le port 853 ouvert. L'ordre de grandeur n'est pas le même, dû au caractère peu précis du scan (seules 1454 @IP ont été soumis à des requêtes DoT). Mais dans tout les cas, ces valeurs restent très petites, et nos résultats trouvés ne sont pas aberrants, bien que manquant de précision.
+
+\
+Nous pouvons alors nous demander pourquoi tant de port 853 sont ouverts sans répondre aux requêtes DoT, et quels peuvent être les autres utilisation de ce port?
+
+Tout d'abord, le port 853 est contenu dans le range des ports normés, c'est à dire des ports spécifiques réservés à une utilité, en l'occurence à écouter le trafic Dot pour le port 853. Les raisons qui pourraient alors expliquer pourquoi les hosts ont le port 853 ouvert mais ne répondent pas aux requêtes DoT peuvent être parce que le serveur à qui on effectue la requête filtre mes requêtes, par exemple parce que l'IP de ma machine n'appartient pas à un range d'IP autorisé par le serveur. Cela peut aussi être une erreur du coté du serveur, soit parce qu'il reçoit trop de trafic, soit à cause d'un problème de configuration. Enfin, il est également possible que le port 853 du serveur soit ouvert pour une autre utilisation, à ce moment spécifique à ce serveur, et configuré manuellement comme tel, auquel cas il ne peut pas répondre aux requêtes DoT.
+
