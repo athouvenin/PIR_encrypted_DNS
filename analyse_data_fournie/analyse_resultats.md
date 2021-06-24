@@ -136,24 +136,64 @@ D'autre part, il a été annoncé 25% de certificats invalides dans l'article de
 **Dataset du 01/02/2019**
 
 \
-1196 résultats (noms différents en enlevant les erreurs).
-On filtre les 10 premiers pour avoir un camembert lisible. Les plus grosses parts :
-    1 CN=*.cleanbrowsing.org (Domaine)
-    2 - : Pas de nom de domaine 
+- 241 Noms de Domaine différents
 
+On filtre les résultats pour rassembler tous les petits acteurs (qui représentent 1% ou moins individuellement) dans une catégorie "Autres".
 
+![](./captures/gra_CN02.PNG)
 
 Cleanbrowsing : 40%
+
 Autres (<14 itérations, représentent chacun 1% ou moins individuellement) : 32%
+
 Pas de CN : 23%
+
 Cloudflare : 3%
+
 Dns.iij.jp : 2%
+
+\ 
+La part des petits résolveurs rassemblés dans la catégorie "Autre" représente donc quand même 1/3 des Noms de Domaines. Autre résultat intéréssant, presque 1/4 des adresses IP ne sont pas associé à un nom de domaine (catégorie "Pas de CN").
 
 \
 **Dataset du 01/05/2019**
 
 \
+- 365 Noms de Domaine différents
+
+On filtre les résultats pour rassembler tous les petits acteurs (qui représentent 1% ou moins individuellement) dans une catégorie "Autres".
+
+![](./captures/gra_CN05.PNG)
+
+Cleanbrowsing : 40%
+
+Autres (<14 itérations, représentent chacun 1% ou moins individuellement) : 32%
+
+Pas de CN : 23%
+
+Cloudflare : 3%
+
+Dns.iij.jp : 2%
+
+\
 **Dataset du 01/07/2020**
+
+\
+- 2110 Noms de Domaine différents
+
+On filtre les résultats pour rassembler tous les petits acteurs (qui représentent 1% ou moins individuellement) dans une catégorie "Autres".
+
+![](./captures/gra_CN07.PNG)
+
+Cleanbrowsing : 40%
+
+Autres (<14 itérations, représentent chacun 1% ou moins individuellement) : 32%
+
+Pas de CN : 23%
+
+Cloudflare : 3%
+
+Dns.iij.jp : 2%
 
 \
 **Observations / Remarques / Conclusion**

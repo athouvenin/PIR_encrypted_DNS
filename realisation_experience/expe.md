@@ -482,7 +482,7 @@ J'utilise donc simplement la commande qui suit et attends qu'elle ait fini de s�
 **Nous obtenons 1454 résultats**, donc 1454 @IP avec le port 853 ouvert. Nous appliquons ensuite les requêtes DoT à ces résultats, toujours de la même façon que précédement et nous avons **5 réponses, soit 0,0034%**.
 
 \
-**Conclusion sur les réponses aux requêtes DoT des @IP avec le port 853 ouvert:**  
+### **Conclusion sur les réponses aux requêtes DoT des @IP avec le port 853 ouvert:**  
 
 Parmi les tests faits, surtout les derniers qui sont un peu plus représentatifs, nous observons très peu de résultats, que ce soit pour le nombre d'@IP avec le port 853 ouvert et encore plus le nombre d'@IP qui répondent aux requêtes DoT. C'était plutôt attendu, et ces résultats sont cohérents avec ce qui a été présenté dans l'article de référence. (On rappelle que d'après l'article moins de 1% des requêtes DNS du monde sont chiffrées).
 
