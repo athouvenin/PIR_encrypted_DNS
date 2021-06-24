@@ -1,4 +1,4 @@
-# PIR sur le DNS encrypté
+# PIR sur le DNS chiffré
 #### Le PIR (Projet d'Initiation à la Recherche) est un projet de recherche sur un sujet en particulier réalisé dans le cadre de la 3ème année d'études à l'INSA (département Télécommunications). Le sujet de mon PIR au sens large est intitulé "DNS et vie privée" (voir descriptif ci-dessous). 
 
 Descriptif du sujet: Le trafic DNS n’est pas protégé comme peut l’être le reste du trafic sur Internet avec
